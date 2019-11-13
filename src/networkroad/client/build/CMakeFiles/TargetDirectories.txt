@@ -1,0 +1,3 @@
+/home/astron/Projects/player/src/networkroad/client/build/CMakeFiles/edit_cache.dir
+/home/astron/Projects/player/src/networkroad/client/build/CMakeFiles/client.dir
+/home/astron/Projects/player/src/networkroad/client/build/CMakeFiles/rebuild_cache.dir

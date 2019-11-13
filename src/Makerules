@@ -1,0 +1,58 @@
+
+$(warning "this is exec makerules file")
+
+#这个伪目标是所有目标的目标，其功能一般是编译所有的目标
+all:
+	@for dir in $(normal_dirs); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; \
+			echo pwd:$(PWD); \
+			if [ -f $$dir${filetype} -a ! -f "Makefile" ]; then \
+                qmake; \
+			fi; \
+			if ! $(MAKE); then \
+				exit 1; \
+			fi; \
+			cd $(ROOTDIR); \
+		fi; \
+	done;
+
+
+#这个伪目标功能是删除所有被make创建的文件
+clean:
+	@for dir in $(normal_dirs) $(qt_dirs); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; make $@; \
+			echo $$dir${filetype}; \
+			if [ -f $$dir${filetype} ]; then \
+			    rm Makefile; \
+			    rm .qmake.stash; \
+			    rm -rf .tmp/; \
+			fi; \
+			cd $(ROOTDIR); \
+		fi; \
+	done
+
+
+
+#这个伪目标功能是安装已编译好的程序，其实就是把目标执行文件拷贝到指定的目标中去
+install:
+
+#这个伪目标的功能是例出改变过的源文件
+print:
+
+
+#这个伪目标功能是把源程序打包备份,也就是一个tar文件
+tar:
+
+
+#这个伪目标功能是创建一个压缩文件，一般是把tar文件压成Z文件,或是gz文件
+dist:
+
+
+#这个伪目标功能是更新所有的目标，以备完整地重编译
+TAGS:
+
+
+#这两个伪目标一般用来测试makefile的流程
+test:

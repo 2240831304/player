@@ -1,0 +1,44 @@
+
+#ifndef AUDIOFILEDECODERWAV_H
+#define AUDIOFILEDECODERWAV_H
+
+#include <QObject>
+#include "audiofiledecoder.h"
+
+extern "C"{
+    #include <SDL2/SDL.h>
+    #include <SDL2/SDL_config.h>
+    #include <SDL2/SDL_mixer.h>
+}
+
+
+namespace eink {
+
+    class AudioFileDecoderWavPrivate;
+
+    class AudioFileDecoderWav : public QObject,public AudioFileDecoder {
+        Q_OBJECT
+        public:
+            AudioFileDecoderWav(QObject *parent = 0);
+            ~AudioFileDecoderWav();
+
+            virtual void play();
+            virtual void stop();
+            virtual void suspendPlay();
+            virtual void keepOnPlay();
+            virtual const char *getAudioPlayerType();
+            virtual void setFilePath(const std::string &);
+            virtual bool getPlayFinishedState();
+
+       private:
+            void initEnv();
+            static void audio_callback(void *, Uint8 * stream, int len);
+
+        private:
+            AudioFileDecoderWavPrivate *d;
+
+    };
+
+}
+
+#endif

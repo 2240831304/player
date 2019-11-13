@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/client.dir/main.cpp.o CMakeFiles/client.dir/httprequest.cpp.o CMakeFiles/client.dir/tcpconnectserver.cpp.o CMakeFiles/client.dir/mqttpubmessage.cpp.o  -o /home/astron/Projects/player/bin/client -rdynamic -lpthread /home/astron/Projects/player/thirdlib/mqtt/lib/libpaho-mqtt3c.so -Wl,-rpath,/home/astron/Projects/player/thirdlib/mqtt/lib 

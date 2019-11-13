@@ -1,0 +1,152 @@
+
+#include "audiofiledecoderwav.h"
+#include <QDebug>
+
+namespace eink {
+
+static Uint8 *sound;
+static Uint32 soundlen;
+static int soundpos;
+static bool isParseFileFinished;
+
+    static void quitEnv()
+    {
+        if(sound)
+            SDL_FreeWAV(sound);
+
+        if(SDL_GetAudioStatus() == SDL_AUDIO_PLAYING) {
+            SDL_PauseAudio(1);
+            SDL_CloseAudio();
+        } else if(SDL_GetAudioStatus() == SDL_AUDIO_PAUSED) {
+            SDL_CloseAudio();
+        }
+    }
+
+    class AudioFileDecoderWavPrivate {
+        public:
+            ~AudioFileDecoderWavPrivate()
+            {
+            }
+
+        public:
+            SDL_AudioSpec spec;
+            std::string fileName;
+    };
+
+
+    AudioFileDecoderWav::AudioFileDecoderWav(QObject *parent)
+        : QObject(parent),d(new AudioFileDecoderWavPrivate)
+    {
+        //设置sdl要初始化的模块
+        if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO)<0)
+        {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"couldn't initialize SDL:%s\n",SDL_GetError());
+        }
+    }
+
+    AudioFileDecoderWav::~AudioFileDecoderWav()
+    {
+        if(d)
+            delete d;
+        d = nullptr;
+    }
+
+    void AudioFileDecoderWav::initEnv()
+    {
+        //打印音频设备
+        for (int i = 0; i < SDL_GetNumAudioDrivers(); i++)
+        {
+            SDL_Log("%i:%s", i, SDL_GetAudioDriver(i));
+        }
+        //查看当前使用的音频设备
+        SDL_Log("Using audio driver:%s\n", SDL_GetCurrentAudioDriver());
+
+        isParseFileFinished = false;
+        soundlen = 0;
+        sound = NULL;
+        soundpos = 0;
+    }
+
+    void AudioFileDecoderWav::play()
+    {
+        initEnv();
+
+        if (SDL_LoadWAV(d->fileName.c_str(), &d->spec, &sound, &soundlen) == NULL)
+        {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"cound't load %s:%s \n",d->fileName.c_str(),SDL_GetError());
+            return;
+        }
+       //设置回调函数
+       d->spec.callback = audio_callback;
+       if (SDL_OpenAudio(&d->spec, NULL) < 0) {
+           SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't open audio: %s\n", SDL_GetError());
+           SDL_FreeWAV(sound);
+           return;
+       }
+
+        //加载声音文件
+        //Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
+        //Mix_Music *sound=Mix_LoadMUS(d->fileName.c_str());
+        //Mix_PlayMusic(sound,1);
+
+       SDL_PauseAudio(0);
+    }
+
+    void AudioFileDecoderWav::stop()
+    {
+        quitEnv();
+    }
+
+    void AudioFileDecoderWav::suspendPlay()
+    {
+        SDL_PauseAudio(1);
+    }
+
+    void AudioFileDecoderWav::keepOnPlay()
+    {
+        SDL_PauseAudio(0);
+    }
+
+    const char *AudioFileDecoderWav::getAudioPlayerType()
+    {
+        return AUDIO_MSG[FILE_WAV].c_str();
+    }
+
+    void AudioFileDecoderWav::setFilePath(const std::string &path)
+    {
+        d->fileName = path;
+    }
+
+    bool AudioFileDecoderWav::getPlayFinishedState()
+    {
+        isParseFileFinished;
+    }
+
+    void AudioFileDecoderWav::audio_callback(void *, Uint8 * stream, int len)
+    {
+        if(isParseFileFinished){
+            SDL_PauseAudio(1);
+            qDebug() << "AudioFileDecoderWav::audio_callback paly finished!!";
+        }
+
+        Uint8 *waveptr;
+        int waveleft;
+        //printf("callback len:%d\n",len);
+
+        /* Set up the pointers */
+        waveptr = sound + soundpos;
+        waveleft = soundlen - soundpos;
+
+        /* Go! */
+        if(waveleft <= 0) {
+            isParseFileFinished = true;
+        } else if(waveleft <= len) {
+            SDL_memcpy(stream, waveptr, waveleft);
+            soundpos += waveleft;
+        } else {
+            SDL_memcpy(stream, waveptr, len);
+            soundpos += len;
+        }
+    }
+
+}

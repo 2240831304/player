@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/astron/Projects/player/src/networkroad/server/main.cpp
+iostream
+-
+waitconnect.h
+/home/astron/Projects/player/src/networkroad/server/waitconnect.h
+
+/home/astron/Projects/player/src/networkroad/server/waitconnect.cpp
+waitconnect.h
+/home/astron/Projects/player/src/networkroad/server/waitconnect.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+sys/types.h
+-
+sys/wait.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+sys/errno.h
+-
+signal.h
+-
+arpa/inet.h
+-
+unistd.h
+-
+pthread.h
+-
+
+/home/astron/Projects/player/src/networkroad/server/waitconnect.h
+iostream
+-
+
