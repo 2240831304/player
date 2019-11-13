@@ -1,0 +1,53 @@
+export ROOTDIR=$PWD
+echo 'ROOTDIR=' $ROOTDIR
+
+#load library application path
+export LIB=$ROOTDIR/lib
+export BIN=$ROOTDIR/bin
+export PLUGINS=$ROOTDIR/plugins
+export APPLIBRARY=$ROOTDIR/applibrary
+
+#load resource code path
+export SRC=$ROOTDIR/src
+export SRCLIB=$SRC/lib
+export SRCAPPLICATION=$SRC/application
+export SRCMUSICPLAY=$SRC/musicplay
+export SRCVEDIORECORDE=$SRC/vediorecorde
+
+#load open library
+export THIRDLIB=$ROOTDIR/thirdlib
+
+export FFMPEG=$THIRDLIB/ffmpeg4
+export FFMPEGINCLUDE=$FFMPEG/include
+export FFMPEGLIB=$FFMPEG/lib
+echo $FFMPEGLIB
+#export LD_LIBRARY_PATH=$FFMPEGLIB
+
+export SDL=$THIRDLIB/sdl
+export SDLINCLUDE=$SDL/include
+export SDLLIB=$SDL/lib
+#export LD_LIBRARY_PATH=$SDLLIB
+
+#export SDL_MIXER=$THIRDLIB/sdl_mixer
+#export SDL_MIXER_INCLUDE=$SDL_MIXER/include
+#export SDL_MIXER_LIB=$SDL_MIXER/lib
+
+export ZLIB=$THIRDLIB/zlib
+
+export OPENCV4=$THIRDLIB/opencv4
+export OPENCV4INCLUDE=$OPENCV4/include
+export OPENCV4LIB=$OPENCV4/lib
+
+export X264=$THIRDLIB/x264
+export X264LIB=$X264/lib
+export X264INCLUDE=$X264/include
+echo 'X264INCLUDE=' $X264INCLUDE
+
+export MQTT=$THIRDLIB/mqtt
+export MQTTLIB=$MQTT/lib
+export MQTTINCLUDE=$MQTT/include
+
+export LD_LIBRARY_PATH=$X264LIB:$OPENCV4LIB:$MQTTLIB
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$FFMPEGLIB:$SDLLIB:$LIB:$PLUGINS:$APPLIBRARY
+
+#./configure --enable-shared --enable-libx264 --enable-gpl --prefix=/usr/local/opensouce/ffmpeg4
