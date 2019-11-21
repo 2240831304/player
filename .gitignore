@@ -2,3 +2,4 @@ applibrary/*
 bin/*
 lib/*
 plugins/*
+*/.tmp/*
