@@ -3,3 +3,4 @@ bin/*
 lib/*
 plugins/*
 */.tmp/*
+thirdlib/*
